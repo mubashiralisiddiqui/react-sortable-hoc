@@ -1,25 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { } from 'react-sortable-hoc'
 import './App.css';
+import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc';
 
-function App() {
+
+const SortableItem = SortableElement(({ value }) => <li style={{cursor:'move'}}>{value}</li>)
+const SortableLst = SortableContainer(({ items }) => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ul>
+      {
+        items.map((item, index) => {
+          return (
+            <SortableItem
+              value={item}
+              index={index}
+              key={index}
+
+            />
+          )
+        })
+      }
+    </ul>
+  )
+})
+function App() {
+  const [list, setlist] = useState([1, 2, 3, 4, 5, 6]);
+  const onSortEnd = ({ oldIndex, newIndex }) => {
+    setlist(arrayMove(list, oldIndex, newIndex))
+  }
+
+  return (
+    <SortableLst
+      onSortEnd={onSortEnd}
+      items={list}
+    />
   );
 }
 
